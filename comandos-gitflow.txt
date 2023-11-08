@@ -1,0 +1,17 @@
+git flow init = inicializacao
+git branch = verificar as branchs
+git flow feature start nome-feat = criar nova feature
+git flow feature finish nome-feat = finalizar a feature, tudo da feature vai para a branch develop
+
+#iniciar o processo de enviar para producao
+git flow release start 0.1.0 = cria branch release baseada na branch develop
+git flow checkout release/0.1.0 = troca para release ou outra branch
+git add .
+git commit -m ""
+git flow release finish 0.1.0 = faz o merge no main/master e develop
+
+#correcao de problemas no sistema
+git flow hotfix start nome = cria branch
+git add .
+git commit -m """
+git flow hotfix finish nome = da merge no main com a correcao, e pede nova tag, faz merge no develop
