@@ -34,7 +34,7 @@ func(repo *UserRepositoryMock) FindByName(name string) (*entity.User, error) {
 	return user1,nil
 } 
 
-func(repo *UserRepositoryMock) UpdateBalance(newBalance float64) error {
+func(repo *UserRepositoryMock) UpdateBalance(username string, newBalance int) error {
 	//args := repo.Called(name)
 	return nil
 }

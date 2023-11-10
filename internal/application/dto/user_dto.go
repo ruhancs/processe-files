@@ -5,9 +5,9 @@ type CreateUserInputDto struct {
 }
 
 type CreateUserOutputDto struct {
-	ID      string  `json:"id"`
-	Name    string  `json:"name"`
-	Balance float64 `json:"balance"`
+	ID      string `json:"id"`
+	Name    string `json:"name"`
+	Balance int    `json:"balance"`
 }
 
 type ListUserOutputDto struct {
@@ -15,7 +15,7 @@ type ListUserOutputDto struct {
 }
 
 type UserOutput struct {
-	ID      string  `json:"id"`
-	Name    string  `json:"name"`
-	Balance float64 `json:"balance"`
+	ID      string `json:"id"`
+	Name    string `json:"name"`
+	Balance int    `json:"balance"`
 }

@@ -6,18 +6,18 @@ import (
 )
 
 type Product struct {
-	ID           string  `json:"id" valid:"uuid"`
-	Title        string  `json:"title" valid:"required"`
-	ProducerName string  `json:"producer_name" valid:"required"`
-	Value        float64 `json:"value" valid:"float"`
+	ID           string `json:"id" valid:"uuid"`
+	Title        string `json:"title" valid:"required"`
+	ProducerName string `json:"producer_name" valid:"required"`
+	Value        int    `json:"value" valid:"float"`
 }
 
-func NewProduct(title, producerName string, value float64) (*Product, error) {
+func NewProduct(title, producerName string, value int) (*Product, error) {
 	product := &Product{
 		ID:           uuid.NewV4().String(),
 		Title:        title,
 		ProducerName: producerName,
-		Value:        float64(value),
+		Value:        value,
 	}
 
 	err := product.IsValid()
