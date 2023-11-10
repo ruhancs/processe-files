@@ -1,6 +1,7 @@
 package usecase_test
 
 import (
+	"context"
 	"testing"
 
 	"github.com/ruhancs/hubla-test/internal/application/dto"
@@ -19,22 +20,22 @@ var product2,_ = entity.NewProduct("P1","U1",10)
 
 var listProductsEntities = []*entity.Product{product1,product2}
 
-func(repo *ProductRepositoryMock) Create(user *entity.Product) error {
+func(repo *ProductRepositoryMock) Create(ctx context.Context,product *entity.Product) error {
 	//args := repo.Called(user)
 	return nil
 } 
 
-func(repo *ProductRepositoryMock) List() ([]*entity.Product, error) {
+func(repo *ProductRepositoryMock) List(ctx context.Context) ([]*entity.Product, error) {
 	//args := repo.Called()
 	return listProductsEntities,nil
 } 
 
-func(repo *ProductRepositoryMock) Get(id string) (*entity.Product, error) {
+func(repo *ProductRepositoryMock) Get(ctx context.Context,id string) (*entity.Product, error) {
 	//args := repo.Called(name)
 	return product1,nil
 } 
 
-func(repo *ProductRepositoryMock) Delete(id string) error {
+func(repo *ProductRepositoryMock) Delete(ctx context.Context,id string) error {
 	//args := repo.Called(name)
 	return nil
 }
@@ -49,7 +50,7 @@ func TestCreateProductUseCase(t *testing.T) {
 		ProducerName: "U1",
 		Value: 10,
 	}
-	output,err := createProductUseCase.Execute(input)
+	output,err := createProductUseCase.Execute(context.Background(),input)
 
 	assert.Nil(t,err)
 	assert.NotNil(t,output)
@@ -61,7 +62,7 @@ func TestCreateProductUseCase(t *testing.T) {
 func TestListProductUseCase(t *testing.T) {
 	listProductUseCase := usecase.NewListProductUseCase(productRepository)
 
-	output,err := listProductUseCase.Execute()
+	output,err := listProductUseCase.Execute(context.Background())
 
 	assert.Nil(t,err)
 	assert.NotNil(t,output)
@@ -78,7 +79,7 @@ func TestListProductUseCase(t *testing.T) {
 func TestGetProductUseCase(t *testing.T) {
 	getProductUseCase := usecase.NewGetProductUseCase(productRepository)
 
-	output,err := getProductUseCase.Execute(product1.Title)
+	output,err := getProductUseCase.Execute(context.Background(),product1.Title)
 
 	assert.Nil(t,err)
 	assert.NotNil(t,output)

@@ -7,7 +7,7 @@ CREATE TABLE "users" (
 
 CREATE TABLE "transactions" (
   "id" varchar NOT NULL PRIMARY KEY,
-  "type" varchar NOT NULL,
+  "type" int NOT NULL,
   "date" varchar NOT NULL,
   "product_name" varchar NOT NULL,
   "seller_name" varchar NOT NULL,

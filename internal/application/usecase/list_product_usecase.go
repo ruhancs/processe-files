@@ -1,6 +1,8 @@
 package usecase
 
 import (
+	"context"
+
 	"github.com/ruhancs/hubla-test/internal/application/dto"
 	"github.com/ruhancs/hubla-test/internal/domain/gateway"
 )
@@ -15,8 +17,8 @@ func NewListProductUseCase(productRepo gateway.ProductRepositoryInterface) *List
 	}
 }
 
-func(usecase *ListProductUseCase) Execute() (dto.ListProductsOutputDto,error) {
-	products,err := usecase.ProductRepository.List()
+func(usecase *ListProductUseCase) Execute(ctx context.Context) (dto.ListProductsOutputDto,error) {
+	products,err := usecase.ProductRepository.List(ctx)
 	if err != nil {
 		return dto.ListProductsOutputDto{},err
 	}

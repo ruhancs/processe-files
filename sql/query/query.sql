@@ -10,14 +10,20 @@ SELECT * FROM users WHERE name = $1 LIMIT 1;
 -- name: UpdateUserBalance :one
 UPDATE users SET balance = $2  WHERE name = $1 RETURNING *;
 
+-- name: DeleteUser :exec
+DELETE FROM users WHERE id = $1;
+
 -- name: CreateTransaction :exec
 INSERT INTO transactions (id,type,value,date,product_name,seller_name) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *;
 
 -- name: ListTransactions :many
-SELECT * FROM transactions WHERE id = $1 LIMIT 1;
+SELECT * FROM transactions;
 
 -- name: GetTransactionById :one
 SELECT * FROM transactions WHERE id = $1 LIMIT 1;
+
+-- name: DeleteTransaction :exec
+DELETE FROM transactions WHERE id = $1;
 
 -- name: CreateProduct :exec
 INSERT INTO products (id,title,producer_name,value) VALUES ($1,$2,$3,$4);

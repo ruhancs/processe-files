@@ -1,6 +1,8 @@
 package usecase
 
 import (
+	"context"
+
 	"github.com/ruhancs/hubla-test/internal/application/dto"
 	"github.com/ruhancs/hubla-test/internal/domain/entity"
 	"github.com/ruhancs/hubla-test/internal/domain/gateway"
@@ -16,13 +18,13 @@ func NewCreateUserUseCase(repository gateway.UserRepositoryInterface) *CreateUse
 	}
 }
 
-func(usecase *CreateUserUseCase) Execute(input dto.CreateUserInputDto) (dto.CreateUserOutputDto,error) {
+func(usecase *CreateUserUseCase) Execute(ctx context.Context,input dto.CreateUserInputDto) (dto.CreateUserOutputDto,error) {
 	user,err := entity.NewUser(input.Name)
 	if err != nil {
 		return dto.CreateUserOutputDto{},nil
 	}
 
-	err = usecase.UserRepository.Create(user)
+	err = usecase.UserRepository.Create(ctx,user)
 	if err != nil {
 		return dto.CreateUserOutputDto{},err
 	}

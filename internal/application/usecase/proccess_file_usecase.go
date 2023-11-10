@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"io"
 	"mime/multipart"
@@ -30,7 +31,7 @@ func NewProccessFileUseCase(
 	}
 }
 
-func (usecase *ProccessFileUseCase) Execute(dataFile multipart.File) (string, error) {
+func (usecase *ProccessFileUseCase) Execute(ctx context.Context,dataFile multipart.File) (string, error) {
 	var file = new(bytes.Buffer)
 	_, err := io.Copy(file, dataFile)
 	if err != nil {
@@ -42,7 +43,6 @@ func (usecase *ProccessFileUseCase) Execute(dataFile multipart.File) (string, er
 
 	userMap := make(map[string]int)
 	for _, line := range lines {
-		controlProcces := len(lines)
 		transactionType, err := strconv.Atoi(line[0:1])
 		transactionDate := line[1:26]
 		productName := line[26:56]
@@ -51,43 +51,40 @@ func (usecase *ProccessFileUseCase) Execute(dataFile multipart.File) (string, er
 		if err != nil {
 			return "invalid transaction value", err
 		}
-		user, err := usecase.UserRepository.FindByName(seller)
+		user, err := usecase.UserRepository.FindByName(ctx,seller)
 		if err != nil {
 			return "seller not registered", err
 		}
-		_, err = usecase.ProductRepository.Get(productName)
+		_, err = usecase.ProductRepository.Get(ctx,productName)
 		if err != nil {
 			return "product not registered", err
 		}
 		usecase.checkMap(userMap, seller, user.Balance)
-		if controlProcces == 0 {
-			return "ok", nil
-		}
-		controlProcces--
+		
 		switch transactionType {
 		case 1:
 			userMap[seller] += value
-			err := usecase.createTransaction(transactionType, value, transactionDate, productName, seller)
+			err := usecase.createTransaction(ctx,transactionType, value, transactionDate, productName, seller)
 			if err != nil {
 				return "error to save transaction", err
 			}
 			continue
 		case 2:
-			msg, err := usecase.proccesAffiliateSale(productName, value, userMap)
+			msg, err := usecase.proccesAffiliateSale(ctx,productName, value, userMap)
 			if err != nil {
 				return msg, err
 			}
-			err = usecase.createTransaction(transactionType, value, transactionDate, productName, seller)
+			err = usecase.createTransaction(ctx,transactionType, value, transactionDate, productName, seller)
 			if err != nil {
 				return "error to save transaction", err
 			}
 			continue
 		case 3:
-			msg, err := usecase.commissionPayment(productName, seller, value, userMap)
+			msg, err := usecase.commissionPayment(ctx,productName, seller, value, userMap)
 			if err != nil {
 				return msg, err
 			}
-			err = usecase.createTransaction(transactionType, value, transactionDate, productName, seller)
+			err = usecase.createTransaction(ctx,transactionType, value, transactionDate, productName, seller)
 			if err != nil {
 				return "error to save transaction", err
 			}
@@ -95,6 +92,11 @@ func (usecase *ProccessFileUseCase) Execute(dataFile multipart.File) (string, er
 		}
 	}
 
+	err = usecase.updateUserBalance(ctx,userMap)
+	if err != nil {
+		return "error to update users balance",err
+	}
+	userMap = make(map[string]int)
 	return "Process all transactions successfuly", nil
 }
 
@@ -111,10 +113,10 @@ func (usecase *ProccessFileUseCase) updateBalanceOnMap(usersMap map[string]int, 
 	return "", nil
 }
 
-func (usecase *ProccessFileUseCase) proccesAffiliateSale(productName string, value int, usermap map[string]int) (string, error) {
+func (usecase *ProccessFileUseCase) proccesAffiliateSale(ctx context.Context,productName string, value int, usermap map[string]int) (string, error) {
 	fmt.Println("proccess affiliate sale")
 	fmt.Println(usermap)
-	product, err := usecase.ProductRepository.Get(productName)
+	product, err := usecase.ProductRepository.Get(ctx ,productName)
 	if err != nil {
 		return "product not registered", err
 	}
@@ -124,10 +126,10 @@ func (usecase *ProccessFileUseCase) proccesAffiliateSale(productName string, val
 	return "", nil
 }
 
-func (usecase *ProccessFileUseCase) commissionPayment(productName, seller string, value int, usermap map[string]int) (string, error) {
+func (usecase *ProccessFileUseCase) commissionPayment(ctx context.Context,productName, seller string, value int, usermap map[string]int) (string, error) {
 	fmt.Println("proccess affiliate commission payment")
 	fmt.Println(usermap)
-	product, err := usecase.ProductRepository.Get(productName)
+	product, err := usecase.ProductRepository.Get(ctx,productName)
 	if err != nil {
 		return "product not registered", err
 	}
@@ -138,21 +140,21 @@ func (usecase *ProccessFileUseCase) commissionPayment(productName, seller string
 	return "", nil
 }
 
-func (usecase *ProccessFileUseCase) createTransaction(transactionType, value int, date, productName, seller string) error {
+func (usecase *ProccessFileUseCase) createTransaction(ctx context.Context,transactionType, value int, date, productName, seller string) error {
 	transation, err := entity.NewTransaction(transactionType, value, date, productName, seller)
 	if err != nil {
 		return err
 	}
-	err = usecase.TransactionRepository.Create(transation)
+	err = usecase.TransactionRepository.Create(ctx,transation)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func(usecase *ProccessFileUseCase) updateUserBalance(usersMap map[string]int) error {
+func(usecase *ProccessFileUseCase) updateUserBalance(ctx context.Context,usersMap map[string]int) error {
 	for user,value := range usersMap {
-		err := usecase.UserRepository.UpdateBalance(user,value)
+		err := usecase.UserRepository.UpdateBalance(ctx,user,value)
 		if err != nil {
 			return err
 		}

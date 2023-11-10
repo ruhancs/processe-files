@@ -1,10 +1,14 @@
 package gateway
 
-import "github.com/ruhancs/hubla-test/internal/domain/entity"
+import (
+	"context"
+
+	"github.com/ruhancs/hubla-test/internal/domain/entity"
+)
 
 type UserRepositoryInterface interface {
-	Create(user *entity.User) error
-	List() ([]*entity.User, error)
-	FindByName(name string) (*entity.User, error)
-	UpdateBalance(username string,newBalance int) error
+	Create(ctx context.Context,user *entity.User) error
+	List(ctx context.Context) ([]*entity.User, error)
+	FindByName(ctx context.Context,name string) (*entity.User, error)
+	UpdateBalance(ctx context.Context,username string,newBalance int) error
 }
