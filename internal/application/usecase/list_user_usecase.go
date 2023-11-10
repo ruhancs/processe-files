@@ -1,6 +1,8 @@
 package usecase
 
 import (
+	"context"
+
 	"github.com/ruhancs/hubla-test/internal/application/dto"
 	"github.com/ruhancs/hubla-test/internal/domain/gateway"
 )
@@ -15,8 +17,8 @@ func NewListUserUseCase(repository gateway.UserRepositoryInterface) *ListUserUse
 	}
 }
 
-func (usecase *ListUserUseCase) Execute() (dto.ListUserOutputDto,error) {
-	users,err := usecase.UserRepository.List()
+func (usecase *ListUserUseCase) Execute(ctx context.Context) (dto.ListUserOutputDto,error) {
+	users,err := usecase.UserRepository.List(ctx)
 	if err != nil {
 		return dto.ListUserOutputDto{},err
 	}

@@ -17,7 +17,7 @@ type Product struct {
 
 type Transaction struct {
 	ID          string
-	Type        string
+	Type        int32
 	Date        string
 	ProductName string
 	SellerName  string

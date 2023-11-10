@@ -1,6 +1,8 @@
 package usecase
 
 import (
+	"context"
+
 	"github.com/ruhancs/hubla-test/internal/application/dto"
 	"github.com/ruhancs/hubla-test/internal/domain/gateway"
 )
@@ -15,8 +17,8 @@ func NewGetUserByNameUseCase(repository gateway.UserRepositoryInterface) *GetUse
 	}
 }
 
-func (usecase *GetUserByNameUseCase) Execute(name string) (dto.UserOutput,error) {
-	user,err := usecase.UserRepository.FindByName(name)
+func (usecase *GetUserByNameUseCase) Execute(ctx context.Context,name string) (dto.UserOutput,error) {
+	user,err := usecase.UserRepository.FindByName(ctx,name)
 	if err != nil {
 		return dto.UserOutput{},err
 	}

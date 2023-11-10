@@ -1,6 +1,8 @@
 package usecase
 
 import (
+	"context"
+
 	"github.com/ruhancs/hubla-test/internal/application/dto"
 	"github.com/ruhancs/hubla-test/internal/domain/entity"
 	"github.com/ruhancs/hubla-test/internal/domain/gateway"
@@ -18,8 +20,8 @@ func NewCreateProductUseCase(userRepo gateway.UserRepositoryInterface, productRe
 	}
 }
 
-func(usecase *CreateProductUseCase) Execute(input dto.CreateProductInputDto) (dto.CreateProductOutputDto,error) {
-	producer,err := usecase.UserRepository.FindByName(input.ProducerName)
+func(usecase *CreateProductUseCase) Execute(ctx context.Context,input dto.CreateProductInputDto) (dto.CreateProductOutputDto,error) {
+	producer,err := usecase.UserRepository.FindByName(ctx,input.ProducerName)
 	if err != nil {
 		return dto.CreateProductOutputDto{},err
 	}
@@ -29,7 +31,7 @@ func(usecase *CreateProductUseCase) Execute(input dto.CreateProductInputDto) (dt
 		return dto.CreateProductOutputDto{},err
 	}
 	
-	err = usecase.ProductRepository.Create(product)
+	err = usecase.ProductRepository.Create(ctx,product)
 	if err != nil {
 		return dto.CreateProductOutputDto{},err
 	}

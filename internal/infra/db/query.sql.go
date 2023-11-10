@@ -36,7 +36,7 @@ INSERT INTO transactions (id,type,value,date,product_name,seller_name) VALUES ($
 
 type CreateTransactionParams struct {
 	ID          string
-	Type        string
+	Type        int32
 	Value       int32
 	Date        string
 	ProductName string
@@ -76,6 +76,24 @@ DELETE FROM products WHERE id = $1
 
 func (q *Queries) DeleteProduct(ctx context.Context, id string) error {
 	_, err := q.db.ExecContext(ctx, deleteProduct, id)
+	return err
+}
+
+const deleteTransaction = `-- name: DeleteTransaction :exec
+DELETE FROM transactions WHERE id = $1
+`
+
+func (q *Queries) DeleteTransaction(ctx context.Context, id string) error {
+	_, err := q.db.ExecContext(ctx, deleteTransaction, id)
+	return err
+}
+
+const deleteUser = `-- name: DeleteUser :exec
+DELETE FROM users WHERE id = $1
+`
+
+func (q *Queries) DeleteUser(ctx context.Context, id string) error {
+	_, err := q.db.ExecContext(ctx, deleteUser, id)
 	return err
 }
 
@@ -163,11 +181,11 @@ func (q *Queries) ListProducts(ctx context.Context) ([]Product, error) {
 }
 
 const listTransactions = `-- name: ListTransactions :many
-SELECT id, type, date, product_name, seller_name, value, created_at FROM transactions WHERE id = $1 LIMIT 1
+SELECT id, type, date, product_name, seller_name, value, created_at FROM transactions
 `
 
-func (q *Queries) ListTransactions(ctx context.Context, id string) ([]Transaction, error) {
-	rows, err := q.db.QueryContext(ctx, listTransactions, id)
+func (q *Queries) ListTransactions(ctx context.Context) ([]Transaction, error) {
+	rows, err := q.db.QueryContext(ctx, listTransactions)
 	if err != nil {
 		return nil, err
 	}

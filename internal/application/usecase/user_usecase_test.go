@@ -1,6 +1,7 @@
 package usecase_test
 
 import (
+	"context"
 	"testing"
 
 	"github.com/ruhancs/hubla-test/internal/application/dto"
@@ -19,22 +20,22 @@ var user2,_ = entity.NewUser("U2")
 
 var listUserEntities = []*entity.User{user1,user2}
 
-func(repo *UserRepositoryMock) Create(user *entity.User) error {
+func(repo *UserRepositoryMock) Create(ctx context.Context,user *entity.User) error {
 	//args := repo.Called(user)
 	return nil
 } 
 
-func(repo *UserRepositoryMock) List() ([]*entity.User, error) {
+func(repo *UserRepositoryMock) List(ctx context.Context) ([]*entity.User, error) {
 	//args := repo.Called()
 	return listUserEntities,nil
 } 
 
-func(repo *UserRepositoryMock) FindByName(name string) (*entity.User, error) {
+func(repo *UserRepositoryMock) FindByName(ctx context.Context,name string) (*entity.User, error) {
 	//args := repo.Called(name)
 	return user1,nil
 } 
 
-func(repo *UserRepositoryMock) UpdateBalance(username string, newBalance int) error {
+func(repo *UserRepositoryMock) UpdateBalance(ctx context.Context,username string, newBalance int) error {
 	//args := repo.Called(name)
 	return nil
 }
@@ -47,7 +48,7 @@ func TestCreateUserUseCase(t *testing.T) {
 	input := dto.CreateUserInputDto{
 		Name: "U1",
 	}
-	output,err := createUserUseCase.Execute(input)
+	output,err := createUserUseCase.Execute(context.Background(),input)
 
 	assert.Nil(t,err)
 	assert.NotNil(t,output)
@@ -59,7 +60,7 @@ func TestCreateUserUseCase(t *testing.T) {
 func TestListUserUseCase(t *testing.T) {
 	listUserUseCase := usecase.NewListUserUseCase(userRepository)
 
-	output,err := listUserUseCase.Execute()
+	output,err := listUserUseCase.Execute(context.Background())
 
 	assert.Nil(t,err)
 	assert.NotNil(t,output)
@@ -70,7 +71,7 @@ func TestListUserUseCase(t *testing.T) {
 func TestGetUserByNameUseCase(t *testing.T) {
 	getUserUseCase := usecase.NewGetUserByNameUseCase(userRepository)
 
-	output,err := getUserUseCase.Execute("U1")
+	output,err := getUserUseCase.Execute(context.Background(),"U1")
 
 	assert.Nil(t,err)
 	assert.NotNil(t,output)
