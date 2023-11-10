@@ -15,8 +15,8 @@ func NewGetProductUseCase(productRepo gateway.ProductRepositoryInterface) *GetPr
 	}
 }
 
-func(usecase *GetProductUseCase) Execute(id string) (dto.ProductOutputDto,error) {
-	product,err := usecase.ProductRepository.Get(id)
+func(usecase *GetProductUseCase) Execute(name string) (dto.ProductOutputDto,error) {
+	product,err := usecase.ProductRepository.Get(name)
 	if err != nil {
 		return dto.ProductOutputDto{},err
 	}

@@ -78,7 +78,7 @@ func TestListProductUseCase(t *testing.T) {
 func TestGetProductUseCase(t *testing.T) {
 	getProductUseCase := usecase.NewGetProductUseCase(productRepository)
 
-	output,err := getProductUseCase.Execute(product1.ID)
+	output,err := getProductUseCase.Execute(product1.Title)
 
 	assert.Nil(t,err)
 	assert.NotNil(t,output)

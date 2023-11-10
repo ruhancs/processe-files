@@ -6,34 +6,34 @@ import (
 )
 
 type Transaction struct {
-	ID        string `json:"id" valid:"uuid"`
-	Type      int    `json:"type" valid:"required"`
-	Date      string `json:"date" valid:"required"`
-	ProductID string `json:"product_id" valid:"required,uuid"`
-	SellerID  string `json:"seler_id" valid:"required,uuid"`
+	ID          string `json:"id" valid:"uuid"`
+	Type        int    `json:"type" valid:"required"`
+	Date        string `json:"date" valid:"required"`
+	Value       int    `json:"value" valid:"required"`
+	ProductName string `json:"product_name" valid:"required"`
 	SellerName  string `json:"seller_name" valid:"required"`
 }
 
-func NewTransaction(transactionType int, date, productID, sellerID, sellerName string)(*Transaction,error) {
+func NewTransaction(transactionType, value int, date, productName, sellerName string) (*Transaction, error) {
 	transaction := &Transaction{
-		ID:        uuid.NewV4().String(),
-		Type:      transactionType,
-		Date:      date,
-		ProductID: productID,
-		SellerID:  sellerID,
-		SellerName: sellerName,
+		ID:          uuid.NewV4().String(),
+		Type:        transactionType,
+		Date:        date,
+		Value:       value,
+		ProductName: productName,
+		SellerName:  sellerName,
 	}
 
 	err := transaction.isValid()
 	if err != nil {
-		return nil,err
+		return nil, err
 	}
 
-	return transaction,nil
+	return transaction, nil
 }
 
 func (t *Transaction) isValid() error {
-	_,err := govalidator.ValidateStruct(t)
+	_, err := govalidator.ValidateStruct(t)
 	if err != nil {
 		return err
 	}

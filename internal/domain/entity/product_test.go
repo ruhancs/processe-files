@@ -13,7 +13,7 @@ func TestValidNewProduct(t *testing.T) {
 	assert.Nil(t,err)
 	assert.NotNil(t,product)
 	assert.Equal(t,"P1",product.ProducerName)
-	assert.Equal(t,10.0,product.Value)
+	assert.Equal(t,10,product.Value)
 	assert.Equal(t,"P1",product.Title)
 }
 
