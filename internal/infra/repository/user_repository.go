@@ -20,7 +20,7 @@ func NewUserRepository(database *sql.DB) *UserRepository {
 	}
 }
 
-func(repo *UserRepository) Create(ctx context.Context,userEntity entity.User) error {
+func(repo *UserRepository) Create(ctx context.Context,userEntity *entity.User) error {
 	err := repo.Queries.CreateUser(ctx,db.CreateUserParams{
 		ID: userEntity.ID,
 		Name: userEntity.Name,

@@ -44,7 +44,7 @@ func TestCreateUser(t *testing.T) {
 	var userRepository = initUserRepository()
 	userEntity := createUser()
 
-	err := userRepository.Create(context.Background(), *userEntity)
+	err := userRepository.Create(context.Background(), userEntity)
 	assert.Nil(t, err)
 
 	userRepository.Queries.DeleteUser(context.Background(),userEntity.ID)

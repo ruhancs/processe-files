@@ -41,7 +41,7 @@ func(repo *ProductRepository) List(ctx context.Context) ([]*entity.Product, erro
 	
 	var productsEntity []*entity.Product
 	for _,productM := range productsModel {
-		product := &entity.Product{ID: productM.ID,Title: productM.Title,Value: int(productM.Value)}
+		product := &entity.Product{ID: productM.ID,Title: productM.Title,Value: int(productM.Value), ProducerName: productM.ProducerName}
 		productsEntity = append(productsEntity, product)
 	}
 
@@ -53,7 +53,7 @@ func(repo *ProductRepository) Get(ctx context.Context, title string) (*entity.Pr
 	if err != nil {
 		return nil,err
 	}
-	productEntity := &entity.Product{ID: productModel.ID,Title: productModel.Title,Value: int(productModel.Value)}
+	productEntity := &entity.Product{ID: productModel.ID,Title: productModel.Title,Value: int(productModel.Value), ProducerName: productModel.ProducerName}
 	return productEntity,nil
 }
 
